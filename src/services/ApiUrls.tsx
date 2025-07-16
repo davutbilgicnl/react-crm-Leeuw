@@ -1,30 +1,26 @@
-// authurl
-export const SERVER = process.env.REACT_APP_API_BASE_URL
-export const LoginUrl = 'auth/login'
-export const RegisterUrl = 'auth/register'
-export const ForgotPasswordUrl = 'auth/forgot-password'
+export const SERVER = process.env.REACT_APP_API_BASE_URL?.replace(/\/$/, '') || ''
 
-export const AuthUrl = 'auth/google'
-// org
-export const OrgUrl = 'org'
-// export const OrgUrl = 'auth/create-org'
-// company
+export const AuthUrl = `${SERVER}/auth/google/`
+export const OrgUrl = `${SERVER}/org`
 
-export const CompanyUrl = 'leads/company'
-export const CompaniesUrl = 'leads/companies'
-// Lead
-export const LeadUrl = 'leads'
-// Contact
-export const ContactUrl = 'contacts'
-// Opportunity
-export const OpportunityUrl = 'opportunities'
-// ACCOUNTS
-export const AccountsUrl = 'accounts'
-// CASES
-export const CasesUrl = 'cases'
-// USERS
-export const UsersUrl = 'users'
-export const UserUrl = 'user'
-// PROFILE
-export const ProfileUrl = 'profile'
-// 
+export const LoginUrl = `${SERVER}/auth/login`
+export const RegisterUrl = `${SERVER}/auth/register`
+export const ForgotPasswordUrl = `${SERVER}/auth/forgot-password`
+
+export const CompanyUrl = `${SERVER}/leads/company`
+export const CompaniesUrl = `${SERVER}/leads/companies`
+
+export const LeadUrl = `${SERVER}/leads`
+
+export const ContactUrl = `${SERVER}/contacts`
+
+export const OpportunityUrl = `${SERVER}/opportunities`
+
+export const AccountsUrl = `${SERVER}/accounts`
+
+export const CasesUrl = `${SERVER}/cases`
+
+export const UsersUrl = `${SERVER}/users`
+export const UserUrl = `${SERVER}/user`
+
+export const ProfileUrl = `${SERVER}/profile`

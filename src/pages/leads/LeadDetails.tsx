@@ -28,7 +28,7 @@ import { LeadUrl } from '../../services/ApiUrls'
 import { fetchData } from '../../components/FetchData'
 import { Label } from '../../components/Label'
 import { AntSwitch, CustomInputBoxWrapper, CustomSelectField, CustomSelectField1, StyledListItemButton, StyledListItemText } from '../../styles/CssStyled'
-import FormateTime from '../../components/FormateTime'
+import FormatTime from '../../components/FormatTime'
 import { formatFileSize } from '../../components/FormatSize'
 import '../../styles/style.css'
 
@@ -307,7 +307,7 @@ function LeadDetails(props: any) {
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
                                         created &nbsp;
-                                        {FormateTime(leadDetails?.created_at)} &nbsp; by   &nbsp;
+                                        {FormatTime(leadDetails?.created_at)} &nbsp; by   &nbsp;
                                         <Avatar
                                             src={leadDetails?.created_by?.profile_pic}
                                             alt={leadDetails?.created_by?.email}
@@ -632,7 +632,7 @@ function LeadDetails(props: any) {
                                                             test
                                                             &nbsp;-&nbsp;<span style={{ textDecoration: 'underline' }}>reply</span>
                                                         </Typography>
-                                                        <Typography sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>{FormateTime(val?.commented_on)}&nbsp;-&nbsp;test
+                                                        <Typography sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>{FormatTime(val?.commented_on)}&nbsp;-&nbsp;test
                                                             {val?.commented_by}
                                                         </Typography>
                                                     </Stack>
