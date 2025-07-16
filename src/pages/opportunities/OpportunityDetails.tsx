@@ -16,7 +16,7 @@ import { OpportunityUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaPlus, FaStar } from 'react-icons/fa'
-import FormateTime from '../../components/FormateTime'
+import FormatTime from '../../components/FormatTime'
 import { Label } from '../../components/Label'
 
 export const formatDate = (dateString: any) => {
@@ -234,7 +234,7 @@ export const OpportunityDetails = (props: any) => {
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
                                         created &nbsp;
-                                        {FormateTime(opportunityDetails?.created_at)} &nbsp; by   &nbsp;
+                                        {FormatTime(opportunityDetails?.created_at)} &nbsp; by   &nbsp;
                                         <Avatar
                                             src={opportunityDetails?.created_by?.profile_pic}
                                             alt={opportunityDetails?.created_by?.email}

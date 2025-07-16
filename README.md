@@ -1,3 +1,52 @@
+1. Inloggen bij Google Cloud Console: https://console.cloud.google.com/
+2. Nieuw Project Aanmaken
+3. OAuth Client ID Aanmaken
+4. Client ID Kopiëren
+5. Gebruik in React Applicatie
+   Voorbeeld:
+Maak .env.local bestand aan
+REACT_APP_GOOGLE_CLIENT_ID=123456789-abcdef.apps.googleusercontent.com
+6. npm install @react-oauth/google
+7. npm start
+
+ Frontend Docker Uitvoeren
+
+1. Dockerfile (in de project home directory)
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+
+2.package.json (sectie scripts)
+"scripts": {
+  "start": "ESLINT_NO_DEV_ERRORS=true react-scripts start",
+  "build": "ESLINT_NO_DEV_ERRORS=true react-scripts build"
+}
+
+3.Docker-commando's (opeenvolgend)
+
+# Ga naar de projectdirectory
+cd C:\Users\ErkanAbal\Desktop\react-crm-Leeuw
+
+# Docker image bouwen
+docker build -t react-crm-frontend .
+
+# Container draaien
+docker run -p 3000:3000 --name react-crm-container react-crm-frontend
+
+# Toegang
+In de browser: http://localhost:3000
+
+#In de Terminal zou je het volgende moeten zien:
+Compiled successfully!
+You can now view react-crm-v2.0 in the browser.
+Local: http://localhost:3000
+
+##############################################################################################################
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

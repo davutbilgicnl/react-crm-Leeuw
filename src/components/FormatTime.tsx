@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function FormateTime(props: any) {
+export default function FormatTime(props: any) {
     // console.log(props,'tttt')
     // const { inputDate } = props;
     const formatDate = (inputDate: string): string => {
@@ -29,6 +29,8 @@ export default function FormateTime(props: any) {
             return `${secondsDifference} ${secondsDifference === 1 ? 'second' : 'seconds'} ago`;
         }
     };
+
+     const inputDate = props?.date || props?.createdAt || props?.time || '';
     return (
         <div>
             {formatDate(props)}

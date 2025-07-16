@@ -7,7 +7,7 @@ import { DeleteModal } from '../../components/DeleteModal';
 import { Label } from '../../components/Label';
 import { fetchData } from '../../components/FetchData';
 import { Spinner } from '../../components/Spinner';
-import FormateTime from '../../components/FormateTime';
+import FormatTime from '../../components/FormatTime';
 import { getComparator, stableSort } from '../../components/Sorting';
 import { FaTrashAlt } from 'react-icons/fa';
 import { FiChevronUp } from '@react-icons/all-files/fi/FiChevronUp';
@@ -16,19 +16,9 @@ import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import { FiChevronLeft } from "@react-icons/all-files/fi/FiChevronLeft";
 import { FiChevronRight } from "@react-icons/all-files/fi/FiChevronRight";
 import { CustomTab, CustomToolbar, FabLeft, FabRight } from '../../styles/CssStyled';
+import { mockLeads, mockUsers } from '../../data/mockData';
 import '../../styles/style.css'
 
-// import css from './css';
-// import emotionStyled from '@emotion/styled';
-// import { styled } from '@mui/system';
-// import { css } from '@emotion/react';
-
-
-
-// margin-bottom: -15px;
-//   display: flex;
-//   justify-content: space-between;
-//   background-color: #1A3353;
 export const CustomTablePagination = styled(TablePagination)`
 .MuiToolbar-root {
   min-width: 100px;
@@ -72,7 +62,6 @@ color: black;
 margin-right: 1;
 `;
 
-
 export const Tabss = styled(Tab)({
   height: '34px',
   textDecoration: 'none',
@@ -89,20 +78,13 @@ export const ToolbarNew = styled(Toolbar)({
     }
   }
 });
-// export const formatDate = (dateString: any) => {
-//   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
-//   return new Date(dateString).toLocaleDateString(undefined, options)
-// }
-// interface LeadList {
-//   drawer: number;
-// }
+
 export default function Leads(props: any) {
-  // const {drawer}=props
   const navigate = useNavigate()
   const [tab, setTab] = useState('open');
   const [loading, setLoading] = useState(true);
 
-  const [leads, setLeads] = useState([])
+  const [leads, setLeads] = useState<any[]>([])
   const [valued, setValued] = useState(10)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [page, setPage] = useState(0)
@@ -110,18 +92,18 @@ export default function Leads(props: any) {
   const [order] = useState('asc')
   const [orderBy] = useState('calories')
 
-  const [openLeads, setOpenLeads] = useState([])
+  const [openLeads, setOpenLeads] = useState<any[]>([])
   const [openLeadsCount, setOpenLeadsCount] = useState(0)
-  const [closedLeads, setClosedLeads] = useState([])
+  const [closedLeads, setClosedLeads] = useState<any[]>([])
   const [openClosedCount, setClosedLeadsCount] = useState(0)
-  const [contacts, setContacts] = useState([])
-  const [status, setStatus] = useState([])
-  const [source, setSource] = useState([])
-  const [companies, setCompanies] = useState([])
-  const [tags, setTags] = useState([])
-  const [users, setUsers] = useState([])
-  const [countries, setCountries] = useState([])
-  const [industries, setIndustries] = useState([])
+  const [contacts, setContacts] = useState<any[]>([])
+  const [status, setStatus] = useState<any[]>([])
+  const [source, setSource] = useState<any[]>([])
+  const [companies, setCompanies] = useState<any[]>([])
+  const [tags, setTags] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
+  const [countries, setCountries] = useState<any[]>([])
+  const [industries, setIndustries] = useState<any[]>([])
 
   const [selectOpen, setSelectOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -133,7 +115,6 @@ export default function Leads(props: any) {
   const [openTotalPages, setOpenTotalPages] = useState<number>(0);
   const [openLoading, setOpenLoading] = useState(true);
 
-
   const [closedCurrentPage, setClosedCurrentPage] = useState<number>(1);
   const [closedRecordsPerPage, setClosedRecordsPerPage] = useState<number>(10);
   const [closedTotalPages, setClosedTotalPages] = useState<number>(0);
@@ -142,65 +123,54 @@ export default function Leads(props: any) {
   const [deleteLeadModal, setDeleteLeadModal] = useState(false)
   const [selectedId, setSelectedId] = useState('')
 
+  // Mock data kullanarak leads'leri yükle
   useEffect(() => {
-    if (!!localStorage.getItem('org')) {
-      getLeads()
-    }
-  }, [!!localStorage.getItem('org')]);
+    const loadMockData = () => {
+      setLoading(true);
+      
+      // Mock data'yı Open ve Closed olarak ayır
+      const openMockLeads = mockLeads.filter(lead => lead.status === 'Open');
+      const closedMockLeads = mockLeads.filter(lead => lead.status === 'Closed');
+      
+      // Mock data ile state'leri güncelle
+      setTimeout(() => {
+        setOpenLeads(openMockLeads as any);
+        setOpenLeadsCount(openMockLeads.length);
+        setOpenTotalPages(Math.ceil(openMockLeads.length / openRecordsPerPage));
+        
+        setClosedLeads(closedMockLeads as any);
+        setClosedLeadsCount(closedMockLeads.length);
+        setClosedTotalPages(Math.ceil(closedMockLeads.length / closedRecordsPerPage));
+        
+        // Mock helper data
+        setUsers(mockUsers as any);
+        setContacts([]);
+        setStatus([{ id: 1, name: 'Open' }, { id: 2, name: 'Closed' }]);
+        setSource([{ id: 1, name: 'Website' }, { id: 2, name: 'Email Campaign' }, { id: 3, name: 'Social Media' }]);
+        setCompanies([]);
+        setTags([]);
+        setCountries([]);
+        setIndustries([]);
+        
+        setLoading(false);
+        setOpenLoading(false);
+        setClosedLoading(false);
+      }, 1000); // 1 saniye loading simülasyonu
+    };
 
-  useEffect(() => {
-    getLeads()
-  }, [openCurrentPage, openRecordsPerPage, closedCurrentPage, closedRecordsPerPage]);
+    loadMockData();
+  }, [openRecordsPerPage, closedRecordsPerPage]);
+
+  // Gerçek API çağrısı yerine mock data kullan
   const getLeads = async () => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org')
-    }
-    try {
-      const openOffset = (openCurrentPage - 1) * openRecordsPerPage;
-      const closeOffset = (closedCurrentPage - 1) * closedRecordsPerPage;
-      await fetchData(`${LeadUrl}/?offset=${tab === "open" ? openOffset : closeOffset}&limit=${tab === "open" ? openRecordsPerPage : closedRecordsPerPage}`, 'GET', null as any, Header)
-        .then((res) => {
-          // console.log(res, 'leads')
-          if (!res.error) {
-            // if (initial) {
-            setOpenLeads(res?.open_leads?.open_leads)
-            setOpenLeadsCount(res?.open_leads?.leads_count)
-            setOpenTotalPages(Math.ceil(res?.open_leads?.leads_count / openRecordsPerPage));
-            setClosedLeads(res?.close_leads?.close_leads)
-            setClosedLeadsCount(res?.close_leads?.leads_count)
-            setClosedTotalPages(Math.ceil(res?.close_leads?.leads_count / closedRecordsPerPage));
-            setContacts(res?.contacts)
-            setStatus(res?.status)
-            setSource(res?.source)
-            setCompanies(res?.companies)
-            setTags(res?.tags)
-            setUsers(res?.users)
-            setCountries(res?.countries)
-            setIndustries(res?.industries)
-            setLoading(false)
-            // setLeadsList();
-            // setInitial(false)
-          }
-          // else {
-          //     // setContactList(Object.assign([], contacts, [data.contact_obj_list]))
-          //     setContactList(prevContactList => prevContactList.concat(data.contact_obj_list));
-          //     // setContactList(...contactList,data.contact_obj_list)
-          //     setLoading(false)
-          // }
-          // }
-        })
-    }
-    catch (error) {
-      console.error('Error fetching data:', error);
-    }
+    // Bu fonksiyon artık mock data kullanıyor, gerçek API çağrısı yapmıyor
+    console.log('Mock data already loaded');
   }
 
   const handleChangeTab = (e: SyntheticEvent, val: any) => {
     setTab(val)
   }
+
   const handleRecordsPerPage = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (tab == 'open') {
       setOpenLoading(true)
@@ -211,8 +181,8 @@ export default function Leads(props: any) {
       setClosedRecordsPerPage(parseInt(event.target.value));
       setClosedCurrentPage(1);
     }
-
   };
+
   const handlePreviousPage = () => {
     if (tab == 'open') {
       setOpenLoading(true)
@@ -232,22 +202,42 @@ export default function Leads(props: any) {
       setClosedCurrentPage((prevPage) => Math.min(prevPage + 1, closedTotalPages));
     }
   };
+
   const onAddHandle = () => {
     if (!loading) {
       navigate('/app/leads/add-leads', {
         state: {
           detail: false,
-          contacts: contacts || [], status: status || [], source: source || [], companies: companies || [], tags: tags || [], users: users || [], countries: countries || [], industries: industries || []
-          // status: leads.status, source: leads.source, industry: leads.industries, users: leads.users, tags: leads.tags, contacts: leads.contacts 
+          contacts: contacts || [], 
+          status: status || [], 
+          source: source || [], 
+          companies: companies || [], 
+          tags: tags || [], 
+          users: users || [], 
+          countries: countries || [], 
+          industries: industries || []
         }
       })
     }
   }
 
   const selectLeadList = (leadId: any) => {
-    navigate(`/app/leads/lead-details`, { state: { leadId, detail: true, contacts: contacts || [], status: status || [], source: source || [], companies: companies || [], tags: tags || [], users: users || [], countries: countries || [], industries: industries || [] } })
-    // navigate('/app/leads/lead-details', { state: { leadId: leadItem.id, edit: storeData, value } })
+    navigate(`/app/leads/lead-details`, { 
+      state: { 
+        leadId, 
+        detail: true, 
+        contacts: contacts || [], 
+        status: status || [], 
+        source: source || [], 
+        companies: companies || [], 
+        tags: tags || [], 
+        users: users || [], 
+        countries: countries || [], 
+        industries: industries || [] 
+      } 
+    })
   }
+
   const deleteLead = (deleteId: any) => {
     setDeleteLeadModal(true)
     setSelectedId(deleteId)
@@ -257,26 +247,21 @@ export default function Leads(props: any) {
     setDeleteLeadModal(false)
     setSelectedId('')
   }
+
   const modalDialog = 'Are You Sure You want to delete selected Lead?'
   const modalTitle = 'Delete Lead'
 
   const deleteItem = () => {
-    const Header = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('Token'),
-      org: localStorage.getItem('org')
-    }
-    fetchData(`${LeadUrl}/${selectedId}/`, 'DELETE', null as any, Header)
-      .then((res: any) => {
-        // console.log('delete:', res);
-        if (!res.error) {
-          deleteLeadModalClose()
-          getLeads()
-        }
-      })
-      .catch(() => {
-      })
+    // Mock delete - sadece state'den kaldır
+    const updatedOpenLeads = openLeads.filter((lead: any) => lead.id !== selectedId);
+    const updatedClosedLeads = closedLeads.filter((lead: any) => lead.id !== selectedId);
+    
+    setOpenLeads(updatedOpenLeads);
+    setClosedLeads(updatedClosedLeads);
+    setOpenLeadsCount(updatedOpenLeads.length);
+    setClosedLeadsCount(updatedClosedLeads.length);
+    
+    deleteLeadModalClose();
   }
 
   const formatDate = (inputDate: string): string => {
@@ -305,14 +290,11 @@ export default function Leads(props: any) {
       return `${secondsDifference} ${secondsDifference === 1 ? 'second' : 'seconds'} ago`;
     }
   };
-  const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
-  const tag = ['account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'leading', 'account', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading', 'account', 'leading']
-  return (
-    <Box sx={{
-      mt: '60px',
-      // width: '1370px' 
-    }}>
 
+  const recordsList = [[10, '10 Records per page'], [20, '20 Records per page'], [30, '30 Records per page'], [40, '40 Records per page'], [50, '50 Records per page']]
+
+  return (
+    <Box sx={{ mt: '60px' }}>
       <CustomToolbar>
         <Tabs defaultValue={tab} onChange={handleChangeTab} sx={{ mt: '26px' }}>
           <CustomTab value="open" label="Open"
@@ -359,7 +341,6 @@ export default function Leads(props: any) {
             </FabLeft>
             <Typography sx={{ mt: 0, textTransform: 'lowercase', fontSize: '15px', color: '#1A3353', textAlign: 'center' }}>
               {tab === 'open' ? `${openCurrentPage} to ${openTotalPages}` : `${closedCurrentPage} to ${closedTotalPages}`}
-
             </Typography>
             <FabRight onClick={handleNextPage} disabled={tab === 'open' ? (openCurrentPage === openTotalPages) : (closedCurrentPage === closedTotalPages)}>
               <FiChevronRight style={{ height: '15px' }} />
@@ -379,16 +360,13 @@ export default function Leads(props: any) {
       {tab === 'open' ?
         <Box sx={{ p: '10px', mt: '5px' }}>
           {
-            // leads.open && leads.open
-            //   ? stableSort(leads.open && leads.open, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-            // stableSort(openLeads, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
             openLeads?.length ? openLeads.map((item: any, index: any) => (
               <Box key={index}>
                 <Box className='lead-box'>
                   <Box className='lead-box1'>
                     <Stack className='lead-row1'>
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
-                        {item?.title}
+                        {item?.name || item?.title}
                       </div>
                       <div onClick={() => deleteLead(item?.id)}>
                         <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
@@ -397,153 +375,90 @@ export default function Leads(props: any) {
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>
                         <div style={{ color: 'gray', fontSize: '16px', textTransform: 'capitalize' }}>
-                          {item?.country || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
+                          {item?.company || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
                         </div>
-                        <Box sx={{
-                          ml: 1
-                          //  flexWrap: 'wrap', width: '50%' 
-                        }}>
-                          {
-                            item.tags.map((tagData: any, index: any) => (
-                              // tag.slice(0, 3).map((tagData: any, index: any) => (
-                              <Label tags={tagData} key={index} />
-                            ))
-                          }{item.tags.length > 4 ? <Link sx={{ ml: 1 }}>+{item.tags.length - 4}</Link> : ''}
+                        <Box sx={{ ml: 1 }}>
+                          <Label tags="Demo Tag" />
                         </Box>
                         <Box sx={{ ml: 1 }}>
                           <div style={{ display: 'flex' }}>
-                            <AvatarGroup
-                              // total={2}
-                              max={3}
-                            >
-                              {/* <Tooltip title={con.user.username}> */}
-                              {/* {tag.map((tagData: any, index: any) => ( */}
-                              {item?.team && item?.team?.map((team: any, index: any) => (
-                                <Avatar
-                                  alt={team}
-                                  src={team}
-                                >
-                                  {team}
-                                </Avatar>
-                              ))}
-                              {/* </Tooltip> */}
-                              {/* )} */}
+                            <AvatarGroup max={3}>
+                              <Avatar alt={item?.name} src="">
+                                {item?.name?.charAt(0)}
+                              </Avatar>
                             </AvatarGroup>
                           </div>
-
                         </Box>
-                        {/* {
-                          item.assigned_to.map((assignItem: any, index: any) => (
-                            assignItem.user_details.profile_pic
-                              ? <Avatar alt='Remy Sharp'
-                                src={assignItem.user_details.profile_pic}
-                              />
-                              : <Avatar alt='Remy Sharp'
-                                size='small'
-                              // sx={{ backgroundColor: 'deepOrange', color: 'white', textTransform: 'capitalize', mt: '-20px', ml: '10px' }}
-                              >
-                                {assignItem.user_details.first_name.charAt(0)}
-                              </Avatar>
-                          ))
-                        } */}
                       </div>
                       <div className='lead-row2-col2'>
-                        {/* created on {formatDate(item.created_on)} by   &nbsp;<span> */}
-                        created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
+                        created&nbsp; {FormatTime(item?.created_at)}&nbsp; by
                         <Avatar
-                          alt={item?.first_name}
-                          src={item?.created_by?.profile_pic}
+                          alt={item?.name}
+                          src=""
                           sx={{ ml: 1 }}
-                        // style={{
-                        //   height: '20px',
-                        //   width: '20px'
-                        // }}
-                        /> &nbsp;&nbsp;{item?.first_name}&nbsp;{item?.last_name}
+                        >
+                          {item?.name?.charAt(0)}
+                        </Avatar> 
+                        &nbsp;&nbsp;{item?.name}
                       </div>
                     </Stack>
                   </Box>
                 </Box>
               </Box>
-            )) : <Spinner />
+            )) : (loading ? <Spinner /> : <div>No open leads found</div>)
           }
         </Box>
         : <Box sx={{ p: '10px', mt: '5px' }}>
           {
-            // stableSort(closedLeads?.length || [], getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item: any, index: any) => (
             closedLeads?.length ? closedLeads.map((item: any, index: any) => (
               <Box key={index}>
                 <Box className='lead-box'>
                   <Box className='lead-box1'>
                     <Stack className='lead-row1'>
                       <div style={{ color: '#1A3353', fontSize: '1rem', fontWeight: '500', cursor: 'pointer' }} onClick={() => selectLeadList(item?.id)}>
-                        {item?.title}
+                        {item?.name || item?.title}
                       </div>
-                      <div onClick={() => deleteLead(item)}>
+                      <div onClick={() => deleteLead(item?.id)}>
                         <FaTrashAlt style={{ cursor: 'pointer', color: 'gray' }} />
                       </div>
                     </Stack>
                     <Stack className='lead-row2'>
                       <div className='lead-row2-col1'>
                         <div style={{ color: 'gray', fontSize: '16px', textTransform: 'capitalize' }}>
-                          {item?.country || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
+                          {item?.company || ''} - source <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.source || '--'}</span> - status <span style={{ color: '#1a3353', fontWeight: 500 }}>{item?.status || '--'}</span>
                         </div>
                         <Box sx={{ ml: 1 }}>
-                          {
-                            item.tags.map((tagData: any, index: any) => (
-                              // tag.slice(0, 3).map((tagData: any, index: any) => (
-                              <Label tags={tagData} key={index} />
-                            ))
-                          }{item.tags.length > 4 ? <Link sx={{ ml: 1 }}>+{item.tags.length - 4}</Link> : ''}
+                          <Label tags="Demo Tag" />
                         </Box>
                         <Box sx={{ ml: 1 }}>
                           <div style={{ display: 'flex' }}>
-                            <AvatarGroup
-                              // total={2}
-                              max={3}
-                            >
-                              {/* {con.map((con) => */}
-                              {/* <Tooltip title={con.user.username}> */}
-                              {item?.team && item?.team?.map((team: any, index: any) => (
-                                <Avatar
-                                  alt={team}
-                                  src={team}
-                                >
-                                  {team}
-                                </Avatar>
-                              ))}
-                              {/* </Tooltip> */}
-                              {/* )} */}
+                            <AvatarGroup max={3}>
+                              <Avatar alt={item?.name} src="">
+                                {item?.name?.charAt(0)}
+                              </Avatar>
                             </AvatarGroup>
                           </div>
-
                         </Box>
-
                       </div>
                       <div className='lead-row2-col2'>
-                        created&nbsp; {FormateTime(item?.created_at)}&nbsp; by
+                        created&nbsp; {FormatTime(item?.created_at)}&nbsp; by
                         <Avatar
-                          alt={item?.first_name}
-                          src={item?.created_by?.profile_pic}
+                          alt={item?.name}
+                          src=""
                           sx={{ ml: 1 }}
-                        /> &nbsp;&nbsp;{item?.first_name}&nbsp;{item?.last_name}
+                        >
+                          {item?.name?.charAt(0)}
+                        </Avatar> 
+                        &nbsp;&nbsp;{item?.name}
                       </div>
                     </Stack>
                   </Box>
                 </Box>
               </Box>
-            )) :
-              <Spinner />
+            )) : (loading ? <Spinner /> : <div>No closed leads found</div>)
           }
         </Box>}
-      {/* {loading &&
-        <Spinner />} */}
-      {/* <DeleteModal
-        onClose={deleteLeadModalClose}
-        open={deleteLeadModal}
-        id={selectedId}
-        modalDialog={modalDialog}
-        modalTitle={modalTitle}
-      /> */}
+
       <DeleteModal
         onClose={deleteLeadModalClose}
         open={deleteLeadModal}
