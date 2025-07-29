@@ -16,7 +16,7 @@ import { AccountsUrl, CasesUrl } from '../../services/ApiUrls'
 import { Tags } from '../../components/Tags'
 import { CustomAppBar } from '../../components/CustomAppBar'
 import { FaPlus, FaStar } from 'react-icons/fa'
-import FormateTime from '../../components/FormateTime'
+import FormatTime from '../../components/FormatTime'
 import { Label } from '../../components/Label'
 
 type response = {
@@ -198,7 +198,7 @@ export const CaseDetails = (props: any) => {
                                 <div style={{ color: 'gray', fontSize: '16px', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: '15px' }}>
                                         created &nbsp;
-                                        {FormateTime(caseDetails?.created_at)} &nbsp; by   &nbsp;
+                                        {FormatTime(caseDetails?.created_at)} &nbsp; by   &nbsp;
                                         <Avatar
                                             src={caseDetails?.created_by?.profile_pic}
                                             alt={caseDetails?.created_by?.email}
